@@ -18,6 +18,21 @@ The project is organized as a Flask application package:
 *   Python 3.14
 *   `virtualenv` tool
 *   AWS Credentials configured (locally or via environment variables) for DynamoDB access.
+*   DynamoDB table as shown in example. Set region as needed.
+    ```bash
+    aws dynamodb create-table \
+    --endpoint-url "http://localhost:8000" \
+    --region <<region>> \
+    --table-name events \
+    --attribute-definitions \
+      AttributeName=AggregateId,AttributeType=S \
+      AttributeName=Timestamp,AttributeType=S \
+    --key-schema \
+      AttributeName=AggregateId,KeyType=HASH \
+      AttributeName=Timestamp,KeyType=RANGE \
+    --billing-mode PAY_PER_REQUEST \
+    --table-class STANDARD
+    ```
 
 ## Installation
 
@@ -54,3 +69,23 @@ The project is organized as a Flask application package:
 ## API Usage
 
 Refer to the `requests.http` file for examples of how to interact with the API endpoints defined in the `events_controller`.
+
+### Examples
+#### Add new event
+```bash
+
+curl -X POST \
+--location "http://127.0.0.1:5000/events" \
+-H "Content-Type: application/json" \
+-H "Accept: application/json" \
+-d '{"aggregate_id": "aggregate_2", "event": "update-2", "data": "string_data"}'
+```
+
+Get all events for an aggregate
+
+```bash
+
+curl -X GET \
+--location "http://127.0.0.1:5000/events/aggregate_2" \
+-H "Accept: application/json"
+```
