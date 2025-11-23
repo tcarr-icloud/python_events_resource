@@ -34,7 +34,7 @@ The project is organized as a Flask application package:
     The project relies on the following key packages: `flask`, `boto3`, `click`, `jinja2`, `werkzeug`.
 
     ```bash
-    pip install flask boto3 click jinja2 werkzeug six
+    pip install flask boto3
     ```
 
 ## Running the Application
