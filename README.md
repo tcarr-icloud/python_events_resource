@@ -70,10 +70,10 @@ The project is organized as a Flask application package:
 
 Refer to the `requests.http` file for examples of how to interact with the API endpoints defined in the `events_controller`.
 
-### Examples
-#### Add new event
-```bash
+**Curl Examples**
 
+```bash
+# Create an event
 curl -X POST \
 --location "http://127.0.0.1:5000/events" \
 -H "Content-Type: application/json" \
@@ -81,10 +81,8 @@ curl -X POST \
 -d '{"aggregate_id": "aggregate_2", "event": "update-2", "data": "string_data"}'
 ```
 
-Get all events for an aggregate
-
 ```bash
-
+# Get all events for aggregate
 curl -X GET \
 --location "http://127.0.0.1:5000/events/aggregate_2" \
 -H "Accept: application/json"
