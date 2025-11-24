@@ -1,4 +1,3 @@
-import datetime
 import os
 
 import boto3
@@ -32,17 +31,18 @@ def get_dynamodb_resource():
     return dynamodb
 
 
-def put(table_name, aggregate_id, event, data):
+def put(table_name, data):
     dynamodb = get_dynamodb_client()
     dynamodb.put_item(
         TableName=table_name,
         Item={
-            'AggregateId': {'S': aggregate_id},
-            'Timestamp': {'S': str(datetime.datetime.now(datetime.timezone.utc))},
-            'Type': {'S': event},
-            "Data": {"S": data}
+            'AggregateId': {'S': data.get('AggregateId')},
+            'Timestamp': {'S': data.get('Timestamp')},
+            'Type': {'S': data.get('Type')},
+            "Data": {'S': data.get('Data')}
         }
     )
+    return
 
 
 def get_one(table_name, aggregate_id, timestamp):
