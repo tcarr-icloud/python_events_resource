@@ -31,21 +31,21 @@ def get_dynamodb_resource():
     return dynamodb
 
 
-def put(table_name, data):
+def put_event(table_name, event):
     dynamodb = get_dynamodb_client()
     dynamodb.put_item(
         TableName=table_name,
         Item={
-            'AggregateId': {'S': data.get('AggregateId')},
-            'Timestamp': {'S': data.get('Timestamp')},
-            'Type': {'S': data.get('Type')},
-            "Data": {'S': data.get('Data')}
+            'AggregateId': {'S': event.get('AggregateId')},
+            'Timestamp': {'S': event.get('Timestamp')},
+            'Type': {'S': event.get('Type')},
+            "Data": {'S': event.get('Data')}
         }
     )
     return
 
 
-def get_one(table_name, aggregate_id, timestamp):
+def get_event_by_pk_and_sk(table_name, aggregate_id, timestamp):
     dynamodb = get_dynamodb_client()
     response = dynamodb.get_item(TableName=table_name,
                                  Key={'AggregateId': {'S': aggregate_id}, 'Timestamp': {'S': timestamp}})
@@ -55,12 +55,11 @@ def get_one(table_name, aggregate_id, timestamp):
         return None
 
 
-def get_one_all(table_name, aggregate_id):
+def get_event_by_pk(table_name, aggregate_id):
     dynamodb = get_dynamodb_resource()
     table = dynamodb.Table(table_name)
-    partition_key_value = aggregate_id
     response = table.query(
-        KeyConditionExpression=Key('AggregateId').eq(partition_key_value),
+        KeyConditionExpression=Key('AggregateId').eq(aggregate_id),
     )
     if 'Items' in response:
         return response['Items']

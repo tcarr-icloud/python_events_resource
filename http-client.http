@@ -17,18 +17,32 @@ Content-Type: application/json
 Accept: application/json
 
 {
-  "AggregateId": "<AggregateId>",
-  "Type": "<create>",
-  "Data": "<string_data>"
+  "AggregateId": "AggregateId-kafka-0",
+  "Type": "create",
+  "Data": "string_data"
+}
+
+### Add dynamodb event
+POST http://127.0.0.1:5000/dynamodb
+Authorization: Bearer {{access_token}}
+Content-Type: application/json
+Accept: application/json
+
+{
+  "AggregateId": "AggregateId-kafka-0",
+  "Timestamp": "2025-01-01 00:00:00.000000+00:00",
+  "Type": "create",
+  "Data": "string_data"
 }
 
 ### Get all records for AggregateId
-GET 127.0.0.1:5000/events/<AggregateId>
+GET 127.0.0.1:5000/dynamodb/AggregateId-kafka-0
 Accept: application/json
 Authorization: Bearer {{access_token}}
 
 ### Get record for AggregateId and Timestamp
-GET 127.0.0.1:5000/events/<AggregateId>/<Timestamp>
+GET 127.0.0.1:5000/dynamodb/AggregateId-kafka-0/2025-01-01 00:00:00.000000+00:00
 Accept: application/json
+Authorization: Bearer {{access_token}}
 
 ###
