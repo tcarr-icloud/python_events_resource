@@ -1,8 +1,9 @@
+import datetime
 import os
 
 from flask import Blueprint, jsonify, request
 
-from flaskr import dynamodb
+from flaskr import dynamodb, kafka
 from flaskr.authentication import auth_decorator
 
 events_bp = Blueprint('events_bp', __name__, url_prefix='/events')
@@ -33,6 +34,8 @@ def get_one(aggregate_id, timestamp):
 @events_bp.route('', methods=['POST'])
 @auth_decorator
 def post():
-    data = request.get_json()
-    dynamodb.put(TABLE, data.get('AggregateId'), data.get('Type'), data.get('Data'))
+    event = request.get_json()
+    event["Timestamp"] = str(datetime.datetime.now(datetime.timezone.utc))
+    dynamodb.put(TABLE, event)
+    kafka.send_event(event)
     return '', 201
